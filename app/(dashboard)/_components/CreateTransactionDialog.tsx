@@ -25,6 +25,10 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import CategoryPicker from "./CategoryPicker";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 
 interface Props {
   trigger: ReactNode;
@@ -39,6 +43,14 @@ const CreateTransactionDialog = ({ trigger, type }: Props) => {
       date: new Date(),
     },
   });
+
+  const handleCategoryChange = React.useCallback(
+    (value: string) => {
+      form.setValue("category", value);
+    },
+    [form]
+  );
+
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -70,11 +82,77 @@ const CreateTransactionDialog = ({ trigger, type }: Props) => {
                   </FormControl>
 
                   <FormDescription>
-                    Transaction description(optional)
+                    Transaction description (optional)
                   </FormDescription>
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input defaultValue={0} type="number" {...field} />
+                  </FormControl>
+
+                  <FormDescription>
+                    Transaction amount (required)
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+            <div className="flex items-center justify-between gap-2">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <CategoryPicker
+                        type={type}
+                        onChange={handleCategoryChange}
+                      />
+                    </FormControl>
+
+                    <FormDescription>
+                      Select a category for this transaction (required)
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Transaction Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-[200px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? format(field.value, "PPP") : "Date"}
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                    </Popover>
+
+                    <FormDescription>
+                      Select a date for this transaction
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+            </div>
           </form>
         </Form>
       </DialogContent>
