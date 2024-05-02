@@ -36,7 +36,7 @@ function StatsCards({ userSettings, from, to }: Props) {
   return (
     <div className="relative w-full flex flex-wrap md:flex-nowrap gap-2">
       <SkeletonWrapper isLoading={statsQuery.isFetching}>
-        <StatCard
+        <StatsCard
           formatter={formatter}
           value={income}
           title="Income"
@@ -47,7 +47,7 @@ function StatsCards({ userSettings, from, to }: Props) {
       </SkeletonWrapper>
 
       <SkeletonWrapper isLoading={statsQuery.isFetching}>
-        <StatCard
+        <StatsCard
           formatter={formatter}
           value={expense}
           title="Expense"
@@ -58,7 +58,7 @@ function StatsCards({ userSettings, from, to }: Props) {
       </SkeletonWrapper>
 
       <SkeletonWrapper isLoading={statsQuery.isFetching}>
-        <StatCard
+        <StatsCard
           formatter={formatter}
           value={balance}
           title="Balance"
@@ -73,14 +73,14 @@ function StatsCards({ userSettings, from, to }: Props) {
 
 export default StatsCards;
 
-interface StatCardProp {
+interface StatsCardProp {
   formatter: Intl.NumberFormat;
   value: number;
   title: string;
   icon: ReactNode;
 }
 
-function StatCard({ formatter, value, title, icon }: StatCardProp) {
+function StatsCard({ formatter, value, title, icon }: StatsCardProp) {
   const formatFn = React.useCallback(
     (value: number) => {
       return formatter.format(value);
@@ -90,7 +90,7 @@ function StatCard({ formatter, value, title, icon }: StatCardProp) {
   return (
     <Card className="flex items-center h-24 w-full gap-2 p-4">
       {icon}
-      <div className="flex flex-col items-center gap-0">
+      <div className="flex flex-col items-start gap-0">
         <p className="text-muted-foreground">{title}</p>
         <CountUp
           end={value}
