@@ -214,7 +214,7 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange }) => {
           }
         }}
         onBlur={handleBlur("month")}
-        className="p-0 outline-none w-6 border-none text-centers bg-transparent"
+        className="p-0 outline-none w-6 border-none text-center bg-transparent"
         placeholder="M"
       />
       <span className="opacity-20 -mx-px">/</span>
