@@ -226,7 +226,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     }
   };
 
-  const checkPreset = (): void => {
+  const checkPreset = React.useCallback((): void => {
     for (const preset of PRESETS) {
       const presetRange = getPresetRange(preset.name);
 
@@ -252,7 +252,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
     }
 
     setSelectedPreset(undefined);
-  };
+  }, [range.from, range.to]);
 
   const resetValues = (): void => {
     setRange({
@@ -289,7 +289,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
 
   useEffect(() => {
     checkPreset();
-  }, [range]);
+  }, [range, checkPreset]);
 
   const PresetButton = ({
     preset,
@@ -330,7 +330,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
       openedRangeRef.current = range;
       openedRangeCompareRef.current = rangeCompare;
     }
-  }, [isOpen]);
+  }, [isOpen, range, rangeCompare]);
 
   return (
     <Popover
