@@ -30,7 +30,16 @@ import { DataTableFacetedFilter } from "@/components/datatable/FacetedFilters";
 import { DataTableViewOptions } from "@/components/datatable/ColumnToggle";
 import { Button } from "@/components/ui/button";
 import { download, generateCsv, mkConfig } from "export-to-csv";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, MoreHorizontal, TrashIcon } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import DeleteTransactionDialog from "./DeleteTransactionDialog";
 
 type TransactionHistoryRow = GetTransactionsHistoryResponseType[0];
 
@@ -109,6 +118,12 @@ const columns: ColumnDef<TransactionHistoryRow>[] = [
         {row.original.formattedAmount}
       </p>
     ),
+  },
+  // Delete transaction
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => <RowActions transaction={row.original} />,
   },
 ];
 
@@ -300,3 +315,42 @@ function TransactionTable({ from, to }: { from: Date; to: Date }) {
 }
 
 export default TransactionTable;
+
+function RowActions({ transaction }: { transaction: TransactionHistoryRow }) {
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+
+  return (
+    <>
+      <DeleteTransactionDialog
+        open={showDeleteDialog}
+        transactionId={transaction.id}
+        setOpen={setShowDeleteDialog}
+      />
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="size-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onSelect={() => {
+              setShowDeleteDialog((prev) => !prev);
+            }}
+          >
+            <TrashIcon className="size-4 text-muted-foreground" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  );
+}
